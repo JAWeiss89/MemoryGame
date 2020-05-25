@@ -62,8 +62,6 @@ h1 {
     font-weight: 400;
     font-size: 1.3em;
     text-shadow: -2px -2px 0 rgb(32, 84, 255), 2px -2px 0 rgb(32, 84, 255), -2px 2px 0 rgb(32, 84, 255), 2px 2px 0 rgb(32, 84, 255);
-    /* margin-bottom: 30px;
-    margin-top: 30px; */
 }
 
 
@@ -78,8 +76,6 @@ h1 {
     width: 98%;
     height: 83%;
 }
-
-/* trying out below */
 
 .intro {
     height: 70%;
@@ -116,8 +112,6 @@ h1 {
     font-family: 'Press Start 2P', cursive;
     color: #333;
 }
-
-/* trying out above */
 
 .card-window {
     height: 120px;
@@ -159,7 +153,13 @@ h1 {
     width: 100%;
     height: 100%;
     transition: transform .5s ease-in-out;
+    -webkit-transition: -webkit-transform .5s ease-in-out;
+    -o-transition: -o-transform .5s ease-in-out;
+    -moz-transition: -moz-transform .5s ease-in-out;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
 }
 
 .card figure {
@@ -175,16 +175,22 @@ h1 {
     background-image: url('https://cdn150.picsart.com/upscale-275195047033211.png');
     background-size: 38px;
     backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
 }
 
 .card .card-back {
     transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
     backface-visibility: hidden;
-
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    
 }
-
-
-
 
 .card-back {
     background-color: #ebcd12;
@@ -193,6 +199,16 @@ h1 {
     justify-content: center;
     align-items: center;
 
+}
+.reveal {
+    transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+}
+
+.hide {
+    transform: none;
 }
 
 .card-container {

@@ -103,134 +103,121 @@ function shuffle(array) {
 // ===============================================================================================
 //  GAME LOGIC
 // ===============================================================================================
+let notificationsWindow = document.querySelector('.notifications-window');
+let notificationText = document.querySelector('.notification-text-window');
+let scoreSpan = document.querySelector('#score');
+let bestScoreSpan = document.querySelector('#best-score');
+
+// let score = Number(scoreSpan.innerText)
+// let bestScore = Number(bestScoreSpan.innerText)
+
+if (localStorage.hasSavedGame) {
+    bestScoreSpan.innerText = localStorage.best;
+}
+
+let score = Number(scoreSpan.innerText)
+let bestScore = Number(bestScoreSpan.innerText)
 
 function startGame() {
     let cards = document.querySelectorAll('.card');
-    let notificationsWindow = document.querySelector('.notifications-window');
-    let notificationText = document.querySelector('.notification-text-window');
-    let scoreSpan = document.querySelector('#score');
-    let bestScoreSpan = document.querySelector('#best-score');
-
-    if (localStorage.hasSavedGame) {
-        bestScoreSpan.innerText = localStorage.best;
-    }
 
     let card1 = "";
     let card2 = "";
-    let score = Number(scoreSpan.innerText)
-    let bestScore = Number(bestScoreSpan.innerText)
-    let cardsFlippedNum = 0;    
+    let cardsFoundNum = 0;    
 
     for (let card of cards) {
+        card.classList.add('hide');
         card.addEventListener('click', function(event) {
-            if (card.classList.contains('found')) {
-                profOakSays('Pick a new card', 1300);
-            } else {
-                if (card1 === "") {
+            if (card2 === "" && !card.classList.contains('found')) {
+                if (card1 === "") { // if this is the first flip 
                     card1 = card.innerText;
                     card.classList.add('first-flip');
                     reveal(card);
-                } else {
+                } else { // if this is the second flip
                     card2 = card.innerText;
                     card.classList.add('second-flip')
                     reveal(card);
-                    if (card1 === card2 && !card.classList.contains('first-flip')) {
+                    if (card1 === card2 && !card.classList.contains('first-flip')) { // if card 1 matches card 2 but is not the same card
                         // EVENT: SUCCESS
                         profOakSays('Excellent!', 1300);
                         card.classList.add('found');
                         document.querySelector('.first-flip').classList.add('found');
                         card.classList.remove('second-flip');
-                        document.querySelector('.first-flip').classList.remove('first-flip'); //this removes type a class from card that was first picked
-                        cardsFlippedNum += 2;
+                        document.querySelector('.first-flip').classList.remove('first-flip'); ///////////////////////////
+                        cardsFoundNum += 2;
                         card1 = "";
                         card2 = "";
-                        if (cardsFlippedNum === cards.length) {
-                            increaseScore()
+                        if (cardsFoundNum === cards.length) { // if the amount of cards found is the same as total cards
+                            increaseScore() // 
                             youWin();
-                            return;
+                            return; // short-cirtcuits game function. Game is over. 
                         }
-                    } else if (card1 === card2){
+                    } else if (card1 === card2){ // if card 1 matches card 2 but card 2 contains class first-slip, then user clicked on same card
                         // EVENT: FAIL (CLICKED ON SAME CARD)
                         profOakSays('same card?!', 1300);
-                        // document.querySelector('.first-flip').classList.remove('first-flip');
-                        card.classList.remove('second-flip');
+                        card.classList.remove('second-flip'); // then remove any designations of card picked as being card2 but card 1 remains flipped
                         card2 = "";
-                        // hide(card);
-                        // card1 = ""; // testing this
-                        
-                    } else {
+                    } else { // if card 2 doesn't match card 1
                         // EVENT: FAIL (NO MATCH)
-                        // profOakSays("Try Again", 1300);
-                        setTimeout(function() {
-                            document.querySelector('.first-flip').style.transform=""; //hides first card
-                            document.querySelector('.first-flip').classList.remove('first-flip');
-                            card.classList.remove('second-flip');
+                        setTimeout(function() { // we hide the cards after 700ms 
+                            document.querySelector('.first-flip').classList.remove('reveal');
                             hide(card);
-                        }, 1500)
-                        card1 = "";
-                        card2 = "";                        
+                            document.querySelector('.first-flip').classList.remove('first-flip'); 
+                            card.classList.remove('second-flip');   
+                            card1 = "";
+                            card2 = "";                               
+                        }, 700)                 
                     }
-                    // card1 = "";
-                    // card2 = "";
                 }
-                increaseScore();
+                increaseScore(); // as long as user doesn't click on already-exposed card, card score will increase.
             }
         })
     }
-
-    function profOakSays(message, time) {
-        notificationsWindow.style.display = 'flex';
-        notificationText.innerText = message;
-        setTimeout(function() {
-            notificationsWindow.style.display = 'none';
-        }, time)
-    }
-    
-    function increaseScore() {
-        score ++;
-        scoreSpan.innerText = String(score);
-    }
-    
-    function reveal(thisCard) {
-        thisCard.style.transform = 'rotateY(180deg)';
-    }
-    
-    function hide(thisCard) {
-        thisCard.style.transform = "";
-    }
-    
-    function youWin() {
-        if (score < bestScore) {
-            notificationsWindow.style.display = 'flex';
-            notificationText.innerText = "New Record!";
-            localStorage.setItem('best', String(score));
-            bestScoreSpan.innerText=score;
-        } else {
-            notificationsWindow.style.display = 'flex';
-            notificationText.innerText = "All pokémon found!";
-        }
-        localStorage.setItem('hasSavedGame', 'true');
-        setTimeout(function(){
-            let cardWindows = document.querySelectorAll('.card-window');
-            let introText = document.querySelector('.intro-text');
-            introText.innerText = `Spectacular job today! You found all the lost pokemon in just ${score} tries. You are shaping up to be an excellent pokémon-trainer.`;
-            intro.style.display ="flex";
-            
-            for (let cardWindow of cardWindows) {
-                cardWindow.remove()
-            }
-        }, 2000)
-
-    }
-    
-
 }
 
+function profOakSays(message, time) {
+    notificationsWindow.style.display = 'flex';
+    notificationText.innerText = message;
+    setTimeout(function() {
+        notificationsWindow.style.display = 'none';
+    }, time)
+}
 
-// ===============================================================================================
-//  PLAY GAME!! 
-// ===============================================================================================
+function increaseScore() {
+    score ++;
+    scoreSpan.innerText = String(score);
+}
 
+function reveal(thisCard) {
+    thisCard.classList.remove('hide');
+    thisCard.classList.add('reveal');
+}
 
+function hide(thisCard) {
+    thisCard.classList.add('hide');
+    thisCard.classList.remove('reveal');
+}
 
+function youWin() {
+    if (score < bestScore) {
+        notificationsWindow.style.display = 'flex';
+        notificationText.innerText = "New Record!";
+        localStorage.setItem('best', String(score));
+        bestScoreSpan.innerText=score;
+    } else {
+        notificationsWindow.style.display = 'flex';
+        notificationText.innerText = "All pokémon found!";
+    }
+    localStorage.setItem('hasSavedGame', 'true');
+    setTimeout(function(){
+        let cardWindows = document.querySelectorAll('.card-window');
+        let introText = document.querySelector('.intro-text');
+        introText.innerText = `Spectacular job today! You found all the lost pokemon in just ${score} tries. You are shaping up to be an excellent pokémon-trainer.`;
+        intro.style.display ="flex";
+        
+        for (let cardWindow of cardWindows) {
+            cardWindow.remove()
+        }
+    }, 2000)
 
+}
