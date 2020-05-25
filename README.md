@@ -2,6 +2,7 @@
 ## Simple app used to practice working with DOM and localStorage using vanilla javascript.
 ### Bugs still to be fixed :
 * Error caused when user clicks on new card before two exposed cards flip back down
+* Made only for chrome browser. Not supported in any other browser yet. 
 
 ### All images are pulled from:
 * [PokemonDB](https://pokemondb.net)
